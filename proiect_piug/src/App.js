@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DiscussionPage from "./DiscussionPage";
@@ -36,13 +36,47 @@ function Navbar() {
     );
 }
 
+// FontSelector component
+function FontSelector({ handleFontChange }) {
+    return (
+        <div style={{ position: 'fixed', bottom: '80px', right: '20px', zIndex: '9999' }}>
+            <div>
+                <button className="btn btn-secondary me-2" onClick={() => handleFontChange('Arial')}>Arial</button>
+                <button className="btn btn-secondary me-2" onClick={() => handleFontChange('Comic Sans MS')}>Comic Sans</button>
+                <button className="btn btn-secondary" onClick={() => handleFontChange('Verdana')}>Verdana</button>
+            </div>
+        </div>
+    );
+}
+
 
 // App component
 function App() {
+    // State variable for background color
+    const [bgColor, setBgColor] = useState('#ffffff'); // Default to white
+    // State variable for font family
+    const [fontFamily, setFontFamily] = useState('Arial'); // Default font
+
+    // Handler function to update background color
+    const handleBgColorChange = (color) => {
+        setBgColor(color);
+    };
+
+    // Handler function to update font family
+    const handleFontChange = (font) => {
+        setFontFamily(font);
+    };
+
     return (
         <Router>
-            <div>
+            <div style={{ backgroundColor: bgColor, fontFamily: fontFamily }}>
                 <Navbar />
+                {/* Font selection control */}
+                <FontSelector handleFontChange={handleFontChange} />
+                {/* Color selection control */}
+                <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: '9999' }}>
+                    <input type="color" value={bgColor} onChange={(e) => handleBgColorChange(e.target.value)} />
+                </div>
                 {/* Routes */}
                 <Routes>
                     <Route path="/challenges" element={<MainContent />} />
@@ -54,6 +88,5 @@ function App() {
         </Router>
     );
 }
-
 
 export default App;
